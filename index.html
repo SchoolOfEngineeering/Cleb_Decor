@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLEB DECOR - Event Decoration Service</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f17;
+            --card-bg: #161c28;
+            --accent-gold: #d4af37;
+            --gold-light: #f3e5ab;
+            --text-main: #f0f4f8;
+            --text-muted: #8b9bb4;
+            --border-color: #263043;
+            --success: #28a745;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Top Bar Header */
+        header {
+            background: rgba(11, 15, 23, 0.9);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--accent-gold), #8a6d1b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 18px;
+        }
+
+        .brand-info h1 {
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+        }
+
+        .brand-info p {
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+        }
+
+        .queue-btn {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Step Progress Bar */
+        .progress-section {
+            padding: 12px 16px;
+            background: #111722;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .step-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 25%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--gold-light));
+            transition: width 0.3s ease;
+        }
+
+        /* Container Main Flow */
+        .content-container {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .step-panel {
+            display: none;
+        }
+
+        .step-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .step-header h2 {
+            font-size: 20px;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .step-header p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* STEP 1: ROOM DIMENSIONS */
+        .card-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: var(--accent-gold);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .input-group {
+            background: #0f141f;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--gold-light);
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        .input-group span {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .calc-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #0f141f;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .calc-item div:first-child {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .calc-item div:last-child {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .venue-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .venue-btn {
+            background: #0f141f;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .venue-btn.active {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light);
+            font-weight: bold;
+        }
+
+        /* STEP 2: THEME SELECTION */
+        .theme-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .theme-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .theme-card.selected {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+        }
+
+        .theme-preview {
+            width: 100px;
+            background: #1e2636;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            flex-shrink: 0;
+        }
+
+        .theme-details {
+            padding: 12px;
+            flex: 1;
+        }
+
+        .theme-brand {
+            font-size: 10px;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 2px 0 4px 0;
+        }
+
+        .theme-tag {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* STEP 3: ADD-ONS */
+        .addon-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .addon-item {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .addon-item.selected {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        .addon-icon {
+            font-size: 20px;
+        }
+
+        .addon-text div:first-child {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* STEP 4: CONTACT FORM */
+        .form-field {
+            margin-bottom: 12px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .form-field input, .form-field textarea {
+            width: 100%;
+            background: #0f141f;
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: #000;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            text-align: center;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-email {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* Sticky Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(17, 23, 34, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-color);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: #1e2636;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent-gold), #b89327);
+            color: #000;
+            border: none;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Queue Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            padding: 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            padding: 16px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: var(--accent-gold);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand-container">
+            <div class="brand-logo">🪷</div>
+            <div class="brand-info">
+                <h1>CLEB DECOR</h1>
+                <p>TRI-CITY ONLY</p>
+            </div>
+        </div>
+        <button class="queue-btn" onclick="toggleQueue()">≡ Queue</button>
+    </header>
+
+    <!-- Progress Indicator -->
+    <div class="progress-section">
+        <div class="step-info">
+            <span id="stepLabel">Step 1: Venue & Size</span>
+            <span id="stepNumber">1 / 4</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="content-container">
+
+        <!-- STEP 1: ROOM & VENUE SPACE -->
+        <div class="step-panel active" id="step1">
+            <div class="step-header">
+                <h2>Room & Venue Space</h2>
+                <p>Specify room dimensions to calculate exact decor coverage</p>
+            </div>
+
+            <div class="card-box">
+                <div class="card-title">
+                    <span>📏 DIMENSIONS (IN FEET)</span>
+                    <span id="volumeBadge" style="font-size:11px; color:var(--text-muted);">Vol: 1000 ft³</span>
+                </div>
+
+                <div class="dimensions-grid">
+                    <div class="input-group">
+                        <label>Length (L)</label>
+                        <input type="number" id="dimL" value="10" min="1" oninput="calculateRoom()">
+                        <span>ft</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Width (W)</label>
+                        <input type="number" id="dimW" value="10" min="1" oninput="calculateRoom()">
+                        <span>ft</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Height (H)</label>
+                        <input type="number" id="dimH" value="10" min="1" oninput="calculateRoom()">
+                        <span>ft</span>
+                    </div>
+                </div>
+
+                <div class="calc-summary">
+                    <div class="calc-item">
+                        <div>Floor Area:</div>
+                        <div id="floorAreaVal">100 sq.ft</div>
+                    </div>
+                    <div class="calc-item">
+                        <div>Est. Balloons:</div>
+                        <div id="estBalloonsVal">~150 pcs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">Venue Setting</div>
+            <div class="venue-toggle">
+                <div class="venue-btn active" id="venueIndoor" onclick="setVenue('Indoor')">
+                    🏠 Indoor Setup<br><span style="font-size:10px; color:var(--text-muted)">Bedroom / Living Room</span>
+                </div>
+                <div class="venue-btn" id="venueOutdoor" onclick="setVenue('Outdoor')">
+                    🌲 Outdoor / Lawn<br><span style="font-size:10px; color:var(--text-muted)">Terrace & Gardens</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: THEME SELECTION -->
+        <div class="step-panel" id="step2">
+            <div class="step-header">
+                <h2>Choose Decoration Theme</h2>
+                <p>Select your favorite styling theme for the event</p>
+            </div>
+
+            <div class="theme-list" id="themeList"></div>
+        </div>
+
+        <!-- STEP 3: ADDITIONAL DECOR -->
+        <div class="step-panel" id="step3">
+            <div class="step-header">
+                <h2>Additional Extras</h2>
+                <p>Add custom accessories to complete your setup</p>
+            </div>
+
+            <div class="addon-grid" id="addonGrid"></div>
+        </div>
+
+        <!-- STEP 4: CONFIRMATION & CONTACT -->
+        <div class="step-panel" id="step4">
+            <div class="step-header">
+                <h2>Request Quote</h2>
+                <p>Enter your details to receive instant confirmation</p>
+            </div>
+
+            <div class="card-box">
+                <div class="form-field">
+                    <label>Full Name</label>
+                    <input type="text" id="custName" placeholder="Aman Kumar Singh">
+                </div>
+                <div class="form-field">
+                    <label>Phone Number</label>
+                    <input type="tel" id="custPhone" placeholder="9934936488">
+                </div>
+                <div class="form-field">
+                    <label>Event Date</label>
+                    <input type="date" id="custDate">
+                </div>
+                <div class="form-field">
+                    <label>Special Instructions</label>
+                    <textarea id="custNotes" rows="2" placeholder="Any specific requirements..."></textarea>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-whatsapp" onclick="submitBooking('whatsapp')">
+                        💬 Confirm via WhatsApp
+                    </button>
+                    <button class="btn-email" onclick="submitBooking('email')">
+                        ✉️ Confirm via Email
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sticky Bottom Nav Bar -->
+    <div class="bottom-nav">
+        <button class="nav-btn" id="backBtn" onclick="prevStep()" disabled>‹ Back</button>
+        <button class="nav-btn primary" id="nextBtn" onclick="nextStep()">Next Step ›</button>
+    </div>
+
+    <!-- Queue Review Modal -->
+    <div class="modal" id="queueModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Submitted Queries</h3>
+                <span style="cursor:pointer" onclick="toggleQueue()">✕</span>
+            </div>
+            <div id="queueList" style="font-size: 12px; color: var(--text-muted);">
+                No requests submitted yet.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let selectedVenue = "Indoor";
+        let selectedTheme = null;
+        let selectedAddons = [];
+
+        const themesData = [
+            { id: 1, brand: "PARTYJOY", name: "Butterfly Theme Birthday Kit", icon: "🦋", tag: "Purple & Silver Foil" },
+            { id: 2, brand: "PARTY MIDLINKERZ", name: "Printed Happy Birthday Combo", icon: "🎈", tag: "Burgundy, Pink & Gold" },
+            { id: 3, brand: "PopTheParty", name: "Printed Doraemon Foil Set", icon: "🐱", tag: "Blue & Silver Star Balloons" },
+            { id: 4, brand: "Crafty villa", name: "Solid Gold & Black Glamour Kit", icon: "✨", tag: "Black & Gold Foil Backdrop" },
+            { id: 5, brand: "PopTheParty", name: "Bride to Be Rose Gold Combo", icon: "💍", tag: "Champagne & Ring Foil" },
+            { id: 6, brand: "bsdc party", name: "Solid Blue Green Birthday Kit", icon: "🍾", tag: "Blue Green Metallic Arch" },
+            { id: 7, brand: "PopTheParty", name: "Mario Theme Birthday Kit", icon: "🍄", tag: "Red/Green Balloons & Fans" },
+            { id: 8, brand: "PopTheParty", name: "Printed Ice Cream Theme", icon: "🍦", tag: "Pastel Arch & Cone Foil" },
+            { id: 9, brand: "PopTheParty", name: "F1 Racing Theme Birthda
